@@ -3,7 +3,6 @@ const fs = require('fs');
 
 exports.getAllPhotos = async (req, res) => {
   const photos = await Photo.find({}).sort('-dateCreated');
-
   res.render('index', {
     photos,
   });
@@ -17,7 +16,7 @@ exports.getPhoto = async (req, res) => {
 };
 
 exports.createPhoto = async (req, res) => {
-  const uploadDir = '/../public/uploads';
+  const uploadDir = 'public/uploads';
 
   if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir);
@@ -44,8 +43,8 @@ exports.updatePhoto = async (req, res) => {
 };
 
 exports.deletePhoto = async (req, res) => {
-  const photo = await Photo.findByIdAndRemove({ _id: req.params.id });
-  let deletedImage = __dirname + '/public' + photo.image;
+  const photo = await Photo.findOne({ _id: req.params.id });
+  let deletedImage = __dirname + '/../public' + photo.image;
   fs.unlinkSync(deletedImage);
   await Photo.findByIdAndRemove(req.params.id);
   res.redirect('/');
